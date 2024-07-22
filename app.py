@@ -4,13 +4,12 @@ from PIL import Image
 import io
 
 # Replace with your VM's IP address or domain name
-SERVER_URL = "http://10.229.36.110:5000"
+SERVER_URL = "http://10.140.36.52:5000"
 
-st.title("TT Stable Diffusion Image Generator")
+st.title("Stable Diffusion Image Generator")
 
 # User input
 prompt = st.text_input("Enter your prompt:", "A beautiful landscape with mountains and a lake")
-
 
 # Generate button
 if st.button("Generate Image"):
@@ -19,8 +18,6 @@ if st.button("Generate Image"):
             # Prepare the request data
             data = {
                 "prompt": prompt,
-                "num_inference_steps": num_inference_steps,
-                "image_size": list(map(int, image_size.split("x")))
             }
             
             # Send request to the server
