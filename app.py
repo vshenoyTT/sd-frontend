@@ -31,4 +31,4 @@ if st.button("Generate Image"):
 
 
 st.markdown("---")
-st.write("This app generates images using Stable Diffusion running on a Wormhole N150 chip.")
+st.write("This app generates images using Stable Diffusion running on Wormhole N150.")
