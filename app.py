@@ -14,7 +14,7 @@ prompt = st.text_input("Enter your prompt:", "A beautiful landscape with mountai
 
 # Generate button
 if st.button("Generate Image"):
-    with st.spinner("Generating image.. This may take a while."):
+    with st.spinner("Generating image... This may take a while."):
         try:
             # Prepare the request data
             data = {"prompt": prompt}
@@ -24,11 +24,19 @@ if st.button("Generate Image"):
             
             if response.status_code == 200:
                 st.success("Prompt added successfully! Waiting for the image to be generated...")
+                # Simulate the process of waiting for the image to be generated
+                time.sleep(10)  # Replace with actual image generation logic
+
+                # After generating the image, update the status
+                update_response = requests.post(f"{SERVER_URL}/update_status", json=data)
+                if update_response.status_code == 200:
+                    st.success("Image generated successfully!")
+                else:
+                    st.error(f"Error updating status: {update_response.status_code} - {update_response.text}")
             else:
                 st.error(f"Error: {response.status_code} - {response.text}")
         except requests.exceptions.RequestException as e:
             st.error(f"Error connecting to the server: {e}")
-
 
 st.markdown("---")
 st.write("This app generates images using Stable Diffusion running on Wormhole N150.")
