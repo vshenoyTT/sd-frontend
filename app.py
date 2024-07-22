@@ -14,7 +14,7 @@ prompt = st.text_input("Enter your prompt:", "A beautiful landscape with mountai
 
 # Generate button
 if st.button("Generate Image"):
-    with st.spinner("Generating image... This may take a while."):
+    with st.spinner("Generating image.. This may take a while."):
         try:
             # Prepare the request data
             data = {"prompt": prompt}
