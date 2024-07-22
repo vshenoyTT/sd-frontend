@@ -6,7 +6,7 @@ import io
 # Replace with your VM's IP address or domain name
 SERVER_URL = "http://10.229.36.110:5000"
 
-st.title("Stable Diffusion Image Generator")
+st.title("TT Stable Diffusion Image Generator")
 
 # User input
 prompt = st.text_input("Enter your prompt:", "A beautiful landscape with mountains and a lake")
