@@ -11,10 +11,6 @@ st.title("TT Stable Diffusion Image Generator")
 # User input
 prompt = st.text_input("Enter your prompt:", "A beautiful landscape with mountains and a lake")
 
-# Sidebar for additional parameters
-st.sidebar.header("Generation Parameters")
-num_inference_steps = st.sidebar.slider("Number of inference steps:", min_value=10, max_value=100, value=50)
-image_size = st.sidebar.selectbox("Image size:", ["256x256", "512x512"], index=1)
 
 # Generate button
 if st.button("Generate Image"):
