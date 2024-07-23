@@ -4,39 +4,46 @@ from PIL import Image
 import io
 import time
 
-# Replace with your VM's IP address or domain name
 SERVER_URL = "http://10.229.36.110:5000"
 
 st.title("TT Stable Diffusion Image Generator")
 
-# User input
-prompt = st.text_input("Enter your prompt:", "A beautiful landscape with mountains and a lake")
+prompt = st.text_input("Enter your prompt:", "")
 
-# Generate button
+# Placeholder for the image
+image_placeholder = st.empty()
+
+# Function to check and update the image
+def check_and_update_image():
+    try:
+        image_response = requests.get(f"{SERVER_URL}/get_image")
+        if image_response.status_code == 200 and image_response.content:
+            image = Image.open(io.BytesIO(image_response.content))
+            image_placeholder.image(image, caption="Generated Image", use_column_width=True)
+        else:
+            image_placeholder.empty()
+    except requests.exceptions.RequestException as e:
+        print(e)
+
+# Button to generate the image
 if st.button("Generate Image"):
     with st.spinner("Generating image... This may take a while."):
         try:
-            # Prepare the request data
             data = {"prompt": prompt}
-            
-            # Send request to add the prompt to the server
             response = requests.post(f"{SERVER_URL}/submit", json=data)
-            
-            if response.status_code == 200:
-                st.success("Prompt added successfully! Waiting for the image to be generated...")
-                # Simulate the process of waiting for the image to be generated
-                time.sleep(10)  # Replace with actual image generation logic
-
-                # After generating the image, update the status
-                update_response = requests.post(f"{SERVER_URL}/update_status", json=data)
-                if update_response.status_code == 200:
-                    st.success("Image generated successfully!")
-                else:
-                    st.error(f"Error updating status: {update_response.status_code} - {update_response.text}")
-            else:
-                st.error(f"Error: {response.status_code} - {response.text}")
+            if response.status_code != 200:
+                st.error(f"Error submitting prompt: {response.status_code} - {response.text}")
         except requests.exceptions.RequestException as e:
             st.error(f"Error connecting to the server: {e}")
 
-st.markdown("---")
-st.write("This app generates images using Stable Diffusion running on Wormhole N150.")
+hide_decoration_bar_style = '''
+    <style>
+        header {visibility: hidden;}
+    </style>
+'''
+st.markdown(hide_decoration_bar_style, unsafe_allow_html=True)
+
+# Continuously check and update the image if it has been generated
+while True:
+    time.sleep(3)  # Check every 3 seconds
+    check_and_update_image()
