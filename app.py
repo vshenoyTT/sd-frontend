@@ -5,18 +5,19 @@ import io
 import time
 import os
 
-
-# http://10.229.36.110:5000
-# 10.229.36.110
-# http://{device_id}:5000
-SERVER_URL = "http://10.229.36.110:5000"
 DOWNLOAD_PATH = os.path.join(os.path.expanduser("~"), "Downloads", "generated_image.png")
 
-st.title("TT Stable Diffusion Image Generator")
+# Add space below the title
+st.title("TT Stable Diffusion Playground")
+st.markdown("<br>", unsafe_allow_html=True)
 
-with st.popover("Add Device ID"):
-    st.markdown("Device ID")
-    name = st.text_input("What's your device ID?")
+# Display an image logo at the end of the title
+
+# Popover for Device ID input
+with st.expander("Add Device ID"):
+    device_id = st.text_input("What's your device ID? 10.229.36.110")
+
+st.markdown("<br>", unsafe_allow_html=True)
 
 prompt = st.text_input("Enter your prompt:", "")
 
@@ -29,28 +30,36 @@ def save_and_display_image(image_data):
     except Exception as e:
         st.error(f"Error processing image: {e}")
 
-# Button to generate the image
-if st.button("Generate Image"):
-    print("TEST")
-    with st.spinner("Generating image... This may take a while."):
-        try:
-            data = {"prompt": prompt}
-            response = requests.post(f"{SERVER_URL}/submit", json=data)
-            if response.status_code != 200:
-                st.error(f"Error submitting prompt: {response.status_code} - {response.text}")
-        except requests.exceptions.RequestException as e:
-            st.error(f"Error connecting to the server: {e}")
-
+# Placeholder for the image
 image_placeholder = st.empty()
 
 # Function to check and update the image
-def check_and_update_image():
+def check_and_update_image(server_url):
     try:
-        image_response = requests.get(f"{SERVER_URL}/get_image")
+        image_response = requests.get(f"{server_url}/get_image")
         if image_response.status_code == 200 and image_response.content:
             save_and_display_image(image_response.content)
     except requests.exceptions.RequestException as e:
         st.error(f"Error connecting to the server: {e}")
+
+# Button to generate the image
+if st.button("Generate Image"):
+    if not device_id:
+        st.error("Please enter your device ID.")
+    else:
+        SERVER_URL = f"http://{device_id}:5000"
+        with st.spinner("Running Stable Diffusion"):
+            try:
+                data = {"prompt": prompt}
+                response = requests.post(f"{SERVER_URL}/submit", json=data)
+                if response.status_code != 200:
+                    st.error(f"Error submitting prompt: {response.status_code} - {response.text}")
+            except requests.exceptions.RequestException as e:
+                st.error(f"Error connecting to the server: {e}")
+            else:
+                while True:
+                    check_and_update_image(SERVER_URL)
+                    time.sleep(2)
 
 hide_decoration_bar_style = '''
     <style>
@@ -58,8 +67,3 @@ hide_decoration_bar_style = '''
     </style>
 '''
 st.markdown(hide_decoration_bar_style, unsafe_allow_html=True)
-
-# Continuously check and update the image if it has been generated
-while True:
-    check_and_update_image()
-    time.sleep(2)
