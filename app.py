@@ -5,6 +5,10 @@ import io
 import time
 import os
 
+
+# http://10.229.36.110:5000
+# 10.229.36.110
+# http://{device_id}:5000
 SERVER_URL = "http://10.229.36.110:5000"
 DOWNLOAD_PATH = os.path.join(os.path.expanduser("~"), "Downloads", "generated_image.png")
 
@@ -58,4 +62,4 @@ st.markdown(hide_decoration_bar_style, unsafe_allow_html=True)
 # Continuously check and update the image if it has been generated
 while True:
     check_and_update_image()
-    time.sleep(2)  # Add a delay to avoid overwhelming the server
+    time.sleep(2)
