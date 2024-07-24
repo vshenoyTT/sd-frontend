@@ -1,3 +1,4 @@
-Frontend for locally run SD demo on TT machines
+Frontend for interactive Stable Diffusion demo on TT Wormhole machines.
 
-streamlit run app.py
+To run, use the command 'streamlit run app.py'
+
